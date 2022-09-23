@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 // 引入 axios 库
 import axios from 'axios'
+import '@/assets/global.less'
 
 // 设置请求基地址
 axios.defaults.baseURL = 'http://www.liulongbin.top:3008'
