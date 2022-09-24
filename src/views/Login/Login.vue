@@ -9,16 +9,15 @@
       <el-form :model="loginForm" :rules="loginRules" ref="loginRef">
         <!-- 用户名 -->
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" placeholder="请输入用户名" maxlength="10" minlength="1"></el-input>
+          <el-input v-model="loginForm.username" prefix-icon="el-icon-user" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
           <el-input
             v-model="loginForm.password"
+            prefix-icon="el-icon-lock"
             type="password"
             placeholder="请输入密码"
-            maxlength="15"
-            minlength="6"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -44,7 +43,7 @@ export default {
       loginRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '用户名必须是1-10的字母数字', trigger: 'blur' }
+          { pattern: /^[a-zA-Z][a-zA-Z0-9]{1,10}$/, message: '请输入不以数字开头的1-10位字符用户名', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -64,6 +63,7 @@ export default {
         console.log(res)
         if (res.code !== 0) this.$message.error(res.message)
         this.$message.success(res.message)
+        // 处理 token
       })
     }
   }
