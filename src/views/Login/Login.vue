@@ -67,6 +67,8 @@ export default {
         // 触发 matutaions
         // commit 提交 模块/方法 传参
         this.$store.commit('user/updateToken', res.token)
+        // 登陆成功后跳转主页
+        this.$router.push('/')
       })
     }
   }
