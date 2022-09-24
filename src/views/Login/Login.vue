@@ -55,7 +55,16 @@ export default {
   },
   methods: {
     gLogin() {
-
+      // 兜底校验
+      this.$refs.loginRef.validate(async valid => {
+        // eslint-disable-next-line no-useless-return
+        if (!valid) return
+        // 发请求
+        const { data: res } = await this.$http.post('/api/login', this.loginForm)
+        console.log(res)
+        if (res.code !== 0) this.$message.error(res.message)
+        this.$message.success(res.message)
+      })
     }
   }
 }

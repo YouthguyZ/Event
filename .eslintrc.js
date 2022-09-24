@@ -16,6 +16,8 @@ module.exports = {
     // 配置规则eslint 函数前括号不空行 修改规则
     'space-before-function-paren': ['error', 'never'],
     // 关掉命名报错
-    'vue/multi-word-component-names': 'off'
+    'vue/multi-word-component-names': 'off',
+    // 关闭禁用多余 return 规则
+    'no-useless-return': 'off'
   }
 }
