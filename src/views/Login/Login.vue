@@ -64,6 +64,9 @@ export default {
         if (res.code !== 0) this.$message.error(res.message)
         this.$message.success(res.message)
         // 处理 token
+        // 触发 matutaions
+        // commit 提交 模块/方法 传参
+        this.$store.commit('user/updateToken', res.token)
       })
     }
   }
