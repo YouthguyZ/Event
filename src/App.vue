@@ -16,15 +16,15 @@
 export default {
   name: 'Bigevent3App',
 
-  data () {
+  data() {
     return {
 
     }
   },
-  created () {
+  created() {
     // console.log(this.$http)
   },
-  mounted () {
+  mounted() {
 
   },
 

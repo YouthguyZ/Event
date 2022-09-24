@@ -17,7 +17,7 @@
           <el-input type="password" prefix-icon="el-icon-lock" v-model="regForm.repassword" placeholder="请输入密码"></el-input>
         </el-form-item>
           <el-button type="primary" style="width:100%" @click="hReg">注册</el-button>
-          <el-link type="info">去登录</el-link>
+          <el-link type="info" @click="$router.push('/login')">去登录</el-link>
       </el-form>
     </div>
   </div>
@@ -26,7 +26,7 @@
 <script>
 export default {
   name: 'Reg',
-  data () {
+  data() {
     // 自定义规则校验
     const checkpass = (rule, value, callback) => {
       if (value !== this.regForm.password) {
@@ -62,7 +62,7 @@ export default {
     }
   },
   methods: {
-    hReg () {
+    hReg() {
       // 注册
       // console.log(111)
       // 1.兜底校验
@@ -80,7 +80,7 @@ export default {
         // 提示用户
         if (res.code === 0) {
           this.$message.success(res.message)
-          // 跳转登录
+          // 编程式导航跳转登录
           this.$router.push('/login')
         } else {
           this.$message.error(res.message)
