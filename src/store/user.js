@@ -33,7 +33,7 @@ export default {
           Authorization: context.state.token
         }
       })
-      console.log(res)
+      // console.log(res)
       // 将结果数据 commit 存入 mutations 中
       // 进行判断
       if (res.code !== 0) return

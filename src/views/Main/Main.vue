@@ -41,37 +41,32 @@
           @close="handleClose"
          -->
         <el-menu
-          default-active="1"
+          default-active="/home"
           class="el-menu-vertical-demo"
           background-color="#23262E"
           text-color="#fff"
           active-text-color="#409EFF"
           unique-opened
           >
-          <el-menu-item index="1">
-            <i class="el-icon-setting"></i>
+          <!-- template 虚拟标签
+            el-submenu 拥有子菜单 可以嵌套
+          -->
+          <template v-for="item in menus">
+          <el-submenu v-if="item.children" :index="item.indexPath" :key="item.indexPath">
+            <template slot="title">
+              <i :class="item.icon"></i>
+              <span>{{item.title}}</span>
+            </template>
+              <el-menu-item v-for="child in item.children" :key="child.indexPath" :index="child.indexPath">
+                <i :class="child.icon"></i>
+                {{child.title}}
+              </el-menu-item>
+          </el-submenu>
+          <el-menu-item v-else :index="item.indexPath" :key="item.indexPath">
+            <i :class="item.icon"></i>
             <span slot="title">首页</span>
           </el-menu-item>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>文章管理</span>
-            </template>
-              <el-menu-item index="2-1">
-                <i class="el-icon-setting"></i>
-                文章内容
-              </el-menu-item>
-              <el-menu-item index="2-2"><i class="el-icon-setting"></i>选项2</el-menu-item>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>个人中心</span>
-            </template>
-              <el-menu-item index="3-1"><i class="el-icon-setting"></i>基本资料</el-menu-item>
-              <el-menu-item index="3-2">选项2</el-menu-item>
-              <el-menu-item index="3-3">选项3</el-menu-item>
-          </el-submenu>
+          </template>
         </el-menu>
       </el-aside>
       <el-container>
@@ -91,6 +86,11 @@
 import { mapState } from 'vuex'
 export default {
   name: 'Main',
+  data() {
+    return {
+      menus: []
+    }
+  },
   methods: {
     hLogout() {
       // 确认退出吗
@@ -103,13 +103,26 @@ export default {
         this.$router.push('/login')
       }).catch(() => {
       })
+    },
+    async getMenus() {
+      const { data: res } = await this.$http.get('/my/menus', {
+        headers: {
+          Authorization: this.token
+        }
+      })
+      // console.log(res)
+      if (res.code === 0) {
+        this.menus = res.data
+      }
     }
   },
   computed: {
     // 辅助函数 mapstate/mapgetters 再 computed 里使用
-    ...mapState('user', ['userInfo'])
+    ...mapState('user', ['userInfo', 'token'])
   },
   created() {
+    // 渲染左侧列表拿数据
+    this.getMenus()
     // 页面渲染发请求拿数据
     this.$store.dispatch('user/getUserInfo')
   }
