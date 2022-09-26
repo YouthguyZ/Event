@@ -15,7 +15,8 @@
         <el-submenu index="1">
           <template slot="title">
             <!-- 头像 -->
-            <img src="../../assets/logo.png" alt="" class="avatar" />
+            <img v-if="userInfo.user_pic" :src="userInfo.user_pic" alt="" class="avatar"/>
+            <img v-else src="../../assets/logo.png" alt="" class="avatar" />
             <span>个人中心</span>
           </template>
           <el-menu-item index="1-1"><i class="el-icon-s-operation"></i>基本资料</el-menu-item>
@@ -30,8 +31,9 @@
       <!-- 左侧边栏区域 -->
       <el-aside width="200px">
         <div class="user-box">
-          <img src="../../assets/logo.png" alt="" />
-          <span>欢迎 xxx</span>
+          <img v-if="userInfo.user_pic" :src="userInfo.user_pic" alt="" />
+          <img v-else src="../../assets/logo.png" alt="" />
+          <span>欢迎 {{userInfo.nickname||userInfo.username}}</span>
         </div>
       </el-aside>
       <el-container>
@@ -47,6 +49,8 @@
 </template>
 
 <script>
+// 使用辅助函数 便捷使用拿数据
+import { mapState } from 'vuex'
 export default {
   name: 'Main',
   methods: {
@@ -62,6 +66,10 @@ export default {
       }).catch(() => {
       })
     }
+  },
+  computed: {
+    // 辅助函数 mapstate/mapgetters 再 computed 里使用
+    ...mapState('user', ['userInfo'])
   },
   created() {
     // 页面渲染发请求拿数据
