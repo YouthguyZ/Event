@@ -2,7 +2,8 @@ export default {
   // 开启命名空间
   namespaced: true,
   state: {
-    token: ''
+    token: '',
+    userInfo: {}
   },
   mutations: {
     // 提交修改 state 的唯一地方
@@ -11,7 +12,12 @@ export default {
     updateToken(state, token) {
       state.token = token
     }
+
   },
-  actions: {},
+  actions: {
+    updateUserInfo(state, info) {
+
+    }
+  },
   getters: {}
 }
