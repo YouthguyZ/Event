@@ -62,6 +62,10 @@ export default {
       }).catch(() => {
       })
     }
+  },
+  created() {
+    // 页面渲染发请求拿数据
+    this.$store.dispatch('user/getUserInfo')
   }
 }
 </script>
