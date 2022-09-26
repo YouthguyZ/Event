@@ -28,6 +28,7 @@ router.beforeEach((to, from, next) => {
   const token = store.state.user.token
   const whiteList = ['/login', '/reg']
   if (!token && !whiteList.includes(to.path)) {
+    Vue.prototype.$message.error('宁还未登录！')
     next('/login')
   } else {
     // 放行
