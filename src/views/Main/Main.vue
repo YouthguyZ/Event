@@ -50,6 +50,7 @@
           >
           <!-- template 虚拟标签
             el-submenu 拥有子菜单 可以嵌套
+            通过 是否拥有 children 来判断是否循环
           -->
           <template v-for="item in menus">
           <el-submenu v-if="item.children" :index="item.indexPath" :key="item.indexPath">
@@ -105,11 +106,13 @@ export default {
       })
     },
     async getMenus() {
-      const { data: res } = await this.$http.get('/my/menus', {
-        headers: {
-          Authorization: this.token
-        }
-      })
+      const { data: res } = await this.$http.get('/my/menus'
+      // {
+      //   headers: {
+      //     Authorization: this.token
+      //   }
+      // }
+      )
       // console.log(res)
       if (res.code === 0) {
         this.menus = res.data

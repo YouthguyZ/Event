@@ -28,11 +28,14 @@ export default {
       // console.log(context)
       // context 模块里的数据 执行上下文
       // state/commit/dispatch/
-      const { data: res } = await axios.get('/my/userinfo', {
-        headers: {
-          Authorization: context.state.token
-        }
-      })
+      const { data: res } = await axios.get('/my/userinfo'
+      // 统一设置注入请求头
+      // {
+      //   headers: {
+      //     Authorization: context.state.token
+      //   }
+      // }
+      )
       // console.log(res)
       // 将结果数据 commit 存入 mutations 中
       // 进行判断
