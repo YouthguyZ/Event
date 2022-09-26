@@ -35,6 +35,44 @@
           <img v-else src="../../assets/logo.png" alt="" />
           <span>欢迎 {{userInfo.nickname||userInfo.username}}</span>
         </div>
+        <!-- 左侧菜单栏 -->
+        <!--
+          @open="handleOpen"
+          @close="handleClose"
+         -->
+        <el-menu
+          default-active="1"
+          class="el-menu-vertical-demo"
+          background-color="#23262E"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          unique-opened
+          >
+          <el-menu-item index="1">
+            <i class="el-icon-setting"></i>
+            <span slot="title">首页</span>
+          </el-menu-item>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>文章管理</span>
+            </template>
+              <el-menu-item index="2-1">
+                <i class="el-icon-setting"></i>
+                文章内容
+              </el-menu-item>
+              <el-menu-item index="2-2"><i class="el-icon-setting"></i>选项2</el-menu-item>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>个人中心</span>
+            </template>
+              <el-menu-item index="3-1"><i class="el-icon-setting"></i>基本资料</el-menu-item>
+              <el-menu-item index="3-2">选项2</el-menu-item>
+              <el-menu-item index="3-3">选项3</el-menu-item>
+          </el-submenu>
+        </el-menu>
       </el-aside>
       <el-container>
         <!-- 页面主体区域 -->
@@ -133,6 +171,14 @@ export default {
   span {
     color: white;
     font-size: 12px;
+  }
+}
+// 侧边栏菜单的样式
+.el-aside {
+  .el-submenu,
+  .el-menu-item {
+    width: 200px;
+    user-select: none;
   }
 }
 </style>
