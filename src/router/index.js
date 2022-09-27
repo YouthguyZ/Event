@@ -5,6 +5,7 @@ import store from '@/store'
 import Reg from '@/views/Reg/Reg.vue'
 import Login from '@/views/Login/Login.vue'
 import main from '@//views/Main/Main.vue'
+import Home from '@/views/Menus/Home/Home'
 
 Vue.use(VueRouter)
 
@@ -12,7 +13,16 @@ const routes = [
   // 路由规则
   { path: '/reg', component: Reg },
   { path: '/login', component: Login },
-  { path: '/', component: main }
+  {
+    path: '/',
+    component: main,
+    // 3. 开启路由重定向
+    redirect: '/home',
+    children: [
+      { path: '/home', component: Home }
+    ]
+
+  }
 ]
 
 const router = new VueRouter({

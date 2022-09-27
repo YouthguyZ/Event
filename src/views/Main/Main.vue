@@ -73,7 +73,7 @@
       <el-container>
         <!-- 页面主体区域 -->
         <el-main>
-          Main.vue后台主页
+          <router-view></router-view>
         </el-main>
         <!-- 底部 footer 区域 -->
         <el-footer>© www.YouthguyZ.com - 张畏也</el-footer>
