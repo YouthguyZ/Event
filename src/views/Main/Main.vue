@@ -39,9 +39,12 @@
         <!--
           @open="handleOpen"
           @close="handleClose"
+          router
+          是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转
          -->
         <el-menu
-          default-active="/home"
+          :router="true"
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           background-color="#23262E"
           text-color="#fff"

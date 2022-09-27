@@ -6,6 +6,7 @@ import Reg from '@/views/Reg/Reg.vue'
 import Login from '@/views/Login/Login.vue'
 import main from '@//views/Main/Main.vue'
 import Home from '@/views/Menus/Home/Home'
+import userInfo from '@/views/Menus/user/userInfo'
 
 Vue.use(VueRouter)
 
@@ -19,7 +20,8 @@ const routes = [
     // 3. 开启路由重定向
     redirect: '/home',
     children: [
-      { path: '/home', component: Home }
+      { path: 'home', component: Home },
+      { path: 'user-info', component: userInfo }
     ]
 
   }
