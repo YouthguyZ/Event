@@ -9,8 +9,14 @@ import Home from '@/views/Menus/Home/Home'
 import userInfo from '@/views/Menus/user/userInfo'
 import useravatar from '@/views/Menus/user/useravatar'
 import userpwd from '@/views/Menus/user/userpwd'
+import artcate from '@/views/Menus/Article/artcate'
 
 Vue.use(VueRouter)
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location, resolve, reject) {
+  if (resolve || reject) return originalPush.call(this, location, resolve, reject)
+  return originalPush.call(this, location).catch((e) => {})
+}
 
 const routes = [
   // 路由规则
@@ -25,7 +31,8 @@ const routes = [
       { path: 'home', component: Home },
       { path: 'user-info', component: userInfo },
       { path: 'user-avatar', component: useravatar },
-      { path: 'user-pwd', component: userpwd }
+      { path: 'user-pwd', component: userpwd },
+      { path: 'art-cate', component: artcate }
     ]
 
   }
@@ -44,7 +51,7 @@ router.beforeEach((to, from, next) => {
   const token = store.state.user.token
   const whiteList = ['/login', '/reg']
   if (!token && !whiteList.includes(to.path)) {
-    Vue.prototype.$message.error('宁还未登录！')
+    Vue.prototype.$message.error('宁还未登录啊啊啊！')
     next('/login')
   } else {
     // 放行

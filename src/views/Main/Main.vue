@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     // 辅助函数 mapstate/mapgetters 再 computed 里使用
-    ...mapState('user', ['userInfo', 'token'])
+    ...mapState('user', ['userInfo'])
   },
   created() {
     // 渲染左侧列表拿数据

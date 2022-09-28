@@ -60,7 +60,7 @@ export default {
         if (!valid) return
         // 发请求
         const { data: res } = await this.$http.post('/api/login', this.loginForm)
-        // console.log(res)
+        console.log(res)
         if (res.code !== 0) this.$message.error(res.message)
         this.$message.success(res.message)
         // 处理 token
