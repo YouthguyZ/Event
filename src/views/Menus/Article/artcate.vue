@@ -11,13 +11,15 @@
         <el-table-column label="分类名称" prop="cate_name"></el-table-column>
         <el-table-column label="分类别名" prop="cate_alias"></el-table-column>
         <el-table-column label="操作">
-          <el-button type="primary" size="mini">修改</el-button>
-          <el-button type="danger" size="mini">删除</el-button>
+          <template v-slot="{row}">
+          <el-button type="primary" size="mini" @click="hEdit(row.id)">修改</el-button>
+          <el-button type="danger" size="mini" @click="hDel(row.id)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
     <el-dialog
-      title="文章分类列表"
+      title="添加文章分类列表"
       :visible.sync="addDialog"
       :close-on-click-modal="false"
       @closed="$refs.addRef.resetFields()"
@@ -37,6 +39,23 @@
         <el-button type="primary" @click="hSubmit">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 修改文章分类的对话框 -->
+    <el-dialog title="修改文章分类" :visible.sync="editVisible" :close-on-click-modal="false"
+      @closed="$refs.editFormRef.resetFields()" width="30%">
+      <!-- 修改的表单 -->
+      <el-form :model="editForm" :rules="editRules" ref="editFormRef" label-width="100px">
+        <el-form-item label="分类名称" prop="cate_name">
+          <el-input v-model="editForm.cate_name"></el-input>
+        </el-form-item>
+        <el-form-item label="分类别名" prop="cate_alias">
+          <el-input v-model="editForm.cate_alias"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="editVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="editSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -53,6 +72,21 @@ export default {
       },
       // 添加表单的验证规则对象
       addRules: {
+        cate_name: [
+          { required: true, message: '请输入分类名称', trigger: 'blur' },
+          { pattern: /^\S{1,10}$/, message: '分类名必须是1-10位的非空字符', trigger: 'blur' }
+        ],
+        cate_alias: [
+          { required: true, message: '请输入分类别名', trigger: 'blur' },
+          { pattern: /^[a-zA-Z0-9]{1,15}$/, message: '分类别名必须是1-15位的字母数字', trigger: 'blur' }
+        ]
+      },
+      editVisible: false,
+      editForm: {
+        cate_name: '',
+        cate_alias: ''
+      },
+      editRules: {
         cate_name: [
           { required: true, message: '请输入分类名称', trigger: 'blur' },
           { pattern: /^\S{1,10}$/, message: '分类名必须是1-10位的非空字符', trigger: 'blur' }
@@ -88,6 +122,32 @@ export default {
         // 重新更新列表
         this.getCateList()
       })
+    },
+    async hEdit(id) {
+      const { data: res } = await this.$http.get('/my/cate/info', { params: { id } })
+      // console.log(res)
+      if (res.code === 0) {
+        this.editForm = res.data
+        this.editVisible = true
+      }
+    },
+    editSubmit() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put('/my/cate/info', this.editForm)
+        // console.log(res)
+        if (res.code !== 0) this.$message.error(res.message)
+        this.$message.success(res.message)
+        this.editVisible = false
+        this.getCateList()
+      })
+    },
+    async hDel(id) {
+      const { data: res } = await this.$http.delete('/my/cate/del', { params: { id } })
+      console.log(res)
+      if (res.coed !== 0) this.$message.error(res.message)
+      this.$message.success(res.message)
+      this.getCateList()
     }
   }
 }
