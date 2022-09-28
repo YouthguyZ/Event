@@ -8,6 +8,7 @@ import main from '@//views/Main/Main.vue'
 import Home from '@/views/Menus/Home/Home'
 import userInfo from '@/views/Menus/user/userInfo'
 import useravatar from '@/views/Menus/user/useravatar'
+import userpwd from '@/views/Menus/user/userpwd'
 
 Vue.use(VueRouter)
 
@@ -23,7 +24,8 @@ const routes = [
     children: [
       { path: 'home', component: Home },
       { path: 'user-info', component: userInfo },
-      { path: 'user-avatar', component: useravatar }
+      { path: 'user-avatar', component: useravatar },
+      { path: 'user-pwd', component: userpwd }
     ]
 
   }
