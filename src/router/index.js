@@ -10,6 +10,7 @@ import userInfo from '@/views/Menus/user/userInfo'
 import useravatar from '@/views/Menus/user/useravatar'
 import userpwd from '@/views/Menus/user/userpwd'
 import artcate from '@/views/Menus/Article/artcate'
+import artist from '@/views/Menus/Article/artist'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -32,7 +33,8 @@ const routes = [
       { path: 'user-info', component: userInfo },
       { path: 'user-avatar', component: useravatar },
       { path: 'user-pwd', component: userpwd },
-      { path: 'art-cate', component: artcate }
+      { path: 'art-cate', component: artcate },
+      { path: 'art-list', component: artist }
     ]
 
   }
