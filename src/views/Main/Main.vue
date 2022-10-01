@@ -19,7 +19,7 @@
             <img v-else src="../../assets/logo.png" alt="" class="avatar" />
             <span>个人中心</span>
           </template>
-          <el-menu-item index="1-1"><i class="el-icon-s-operation"></i>基本资料</el-menu-item>
+          <el-menu-item index="1-1"><i class="el-icon-s-operation" @click="huser"></i>基本资料</el-menu-item>
           <el-menu-item index="1-2"><i class="el-icon-camera"></i>更换头像</el-menu-item>
           <el-menu-item index="1-3"><i class="el-icon-key"></i>重置密码</el-menu-item>
         </el-submenu>
@@ -120,6 +120,9 @@ export default {
       if (res.code === 0) {
         this.menus = res.data
       }
+    },
+    huser() {
+      console.log(111)
     }
   },
   computed: {

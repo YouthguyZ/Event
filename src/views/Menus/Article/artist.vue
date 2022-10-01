@@ -25,13 +25,20 @@
           </el-form-item>
         </el-form>
         <!-- 发表文章的按钮 -->
-        <el-button type="primary" size="small" class="btn-pub">发表文章</el-button>
+        <el-button type="primary" size="small" class="btn-pub" @click="pubDialog=true">发表文章</el-button>
       </div>
 
       <!-- 文章表格区域 -->
 
       <!-- 分页区域 -->
     </el-card>
+    <!-- 发表文章的 Dialog 对话框 -->
+    <el-dialog title="发表文章"
+    :visible.sync="pubDialog"
+    fullscreen
+    >
+      <span>这是一段信息</span>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,7 +53,8 @@ export default {
         pagesize: 2,
         cate_id: '',
         state: ''
-      }
+      },
+      pubDialog: false
     }
   }
 }
