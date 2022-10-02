@@ -121,4 +121,8 @@ export default {
     margin-top: 5px;
   }
 }
+// less 深度选择器 /deep/
+/deep/.ql-editor{
+  height: 300px;
+}
 </style>
