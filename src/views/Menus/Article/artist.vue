@@ -35,9 +35,28 @@
     <!-- 发表文章的 Dialog 对话框 -->
     <el-dialog title="发表文章"
     :visible.sync="pubDialog"
+    :before-close="handleClose"
     fullscreen
     >
-      <span>这是一段信息</span>
+      <!-- <span>这是一段信息</span> -->
+      <!-- 发布文章的对话框 -->
+      <el-form :model="pubForm" :rules="pubFormRules" ref="pubForm" label-width="100px">
+        <el-form-item label="文章标题" prop="title">
+          <el-input v-model="pubForm.title" placeholder="请输入标题"></el-input>
+        </el-form-item>
+        <el-form-item label="文章分类" prop="cate_id">
+          <el-select v-model="pubForm.cate_id" placeholder="请选择分类" style="width: 100%;">
+            <el-option v-for="item in cateList" :key="item.id" :label="item.cate_name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="文章内容">
+          <!-- 使用 v-model 进行双向的数据绑定 -->
+          <quill-editor v-model="pubForm.content"></quill-editor>
+        </el-form-item>
+        <el-form-item label="文章图片">
+         <span>gggg</span>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -54,8 +73,41 @@ export default {
         cate_id: '',
         state: ''
       },
-      pubDialog: false
+      pubDialog: false,
+      // 表单的数据对象
+      pubForm: {
+        title: '',
+        cate_id: '',
+        content: ''
+      },
+      // 表单的验证规则对象
+      pubFormRules: {
+        title: [
+          { required: true, message: '请输入文章标题', trigger: 'blur' },
+          { min: 1, max: 30, message: '文章标题的长度为1-30个字符', trigger: 'blur' }
+        ],
+        cate_id: [{ required: true, message: '请选择文章标题', trigger: 'blur' }]
+      },
+      cateList: []
     }
+  },
+  methods: {
+    handleClose(done) {
+      this.$confirm('确认关闭吗，关闭会丢失数据？', '提示', { type: 'warning' })
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
+    },
+    async getCateList() {
+      const { data: res } = await this.$http.get('/my/cate/list')
+      if (res.code === 0) {
+        this.cateList = res.data
+      }
+    }
+  },
+  created() {
+    this.getCateList()
   }
 }
 </script>
