@@ -49,12 +49,23 @@
             <el-option v-for="item in cateList" :key="item.id" :label="item.cate_name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="文章内容">
+        <el-form-item label="文章内容" prop="content">
           <!-- 使用 v-model 进行双向的数据绑定 -->
-          <quill-editor v-model="pubForm.content"></quill-editor>
+          <quill-editor v-model="pubForm.content" @blur="$refs.pubForm.validateField('content')"></quill-editor>
         </el-form-item>
-        <el-form-item label="文章图片">
-         <span>gggg</span>
+        <el-form-item label="文章封面" prop="cover_img">
+          <!-- 用来显示封面的图片 -->
+          <img v-if="preview" :src="preview" alt="" class="cover-img" ref="imgRef" />
+          <img v-else src="../../../assets/images/cover.jpg" alt="" class="cover-img" ref="imgRef" />
+          <br />
+          <!-- 文件选择框，默认被隐藏 -->
+          <input type="file" style="display: none;" accept="image/*" ref="iptFileRef" @change="hImg"/>
+          <!-- 选择封面的按钮 -->
+          <el-button type="text" @click="$refs.iptFileRef.click()">+ 选择封面</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="hPub('已发布')">发布</el-button>
+          <el-button type="info" @click="hPub('草稿')">保存草稿</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -78,7 +89,9 @@ export default {
       pubForm: {
         title: '',
         cate_id: '',
-        content: ''
+        content: '',
+        cover_img: '',
+        state: ''
       },
       // 表单的验证规则对象
       pubFormRules: {
@@ -86,9 +99,17 @@ export default {
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           { min: 1, max: 30, message: '文章标题的长度为1-30个字符', trigger: 'blur' }
         ],
-        cate_id: [{ required: true, message: '请选择文章标题', trigger: 'blur' }]
+        cate_id: [{ required: true, message: '请选择文章标题', trigger: 'change' }],
+        content: [
+          { required: true, message: '请输入文章内容', trigger: 'blur' }
+        ],
+        cover_img: [
+          { required: true, message: '请添加文章封面', trigger: 'blur' }
+        ]
       },
-      cateList: []
+      cateList: [],
+      // 预览头像
+      preview: ''
     }
   },
   methods: {
@@ -96,6 +117,7 @@ export default {
       this.$confirm('确认关闭吗，关闭会丢失数据？', '提示', { type: 'warning' })
         .then(_ => {
           done()
+          this.preview = ''
         })
         .catch(_ => {})
     },
@@ -104,6 +126,43 @@ export default {
       if (res.code === 0) {
         this.cateList = res.data
       }
+    },
+    hImg(e) {
+      // console.log(e)
+      const file = e.target.files[0]
+      if (file) {
+        this.pubForm.cover_img = file
+        // 使用 url 地址预览
+        // const str = URL.createObjectURL(file)
+        // console.log(str)
+        this.preview = URL.createObjectURL(file)
+        // 校验封面
+        this.$refs.pubForm.validateField('cover_img')
+      } else {
+        this.pubForm.cover_img = ''
+        this.preview = ''
+      }
+    },
+    hPub(state) {
+      this.pubForm.state = state
+      // 兜底校验
+      this.$refs.pubForm.validate(async valid => {
+        if (!valid) return
+        // formdata 格式文件
+        const fd = new FormData()
+        for (const k in this.pubForm) {
+          fd.append(k, this.pubForm[k])
+        }
+        const { data: res } = await this.$http.post('/my/article/add', fd)
+        console.log(res)
+        if (res.code === 0) {
+          this.$message.success(res.message)
+          this.pubDialog = false
+          // this.getCateList()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   },
   created() {
@@ -124,5 +183,11 @@ export default {
 // less 深度选择器 /deep/
 /deep/.ql-editor{
   height: 300px;
+}
+// 设置图片封面的宽高
+.cover-img {
+  width: 400px;
+  height: 280px;
+  object-fit: cover;
 }
 </style>
