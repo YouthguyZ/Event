@@ -9,8 +9,8 @@
         <el-form :inline="true" :model="q">
           <el-form-item label="文章分类">
             <el-select v-model="q.cate_id" placeholder="请选择分类" size="small">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option v-for="item in cateList" :key="item.id" :label="item.cate_name" :value="item.id"></el-option>
+              <!-- <el-option label="区域二" value="beijing"></el-option> -->
             </el-select>
           </el-form-item>
           <el-form-item label="发布状态" style="margin-left: 15px;">
@@ -20,8 +20,8 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small">筛选</el-button>
-            <el-button type="info" size="small">重置</el-button>
+            <el-button type="primary" size="small" @click="initArticleList">筛选</el-button>
+            <el-button type="info" size="small" @click="resetFrom">重置</el-button>
           </el-form-item>
         </el-form>
         <!-- 发表文章的按钮 -->
@@ -233,6 +233,16 @@ export default {
       // 为页码值赋值
       this.q.pagenum = val
       // 重新发起请求
+      this.initArticleList()
+    },
+    // 重置功能
+    resetFrom() {
+      this.q = {
+        pagenum: 1,
+        pagesize: 2,
+        cate_id: '',
+        state: ''
+      }
       this.initArticleList()
     }
   },
