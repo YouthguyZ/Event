@@ -45,8 +45,11 @@
             width="180">
           </el-table-column>
           <el-table-column
-            prop="pub_date"
+
             label="发表时间">
+            <template v-slot="{row}">
+              {{formatDate(row.pub_date)}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="state"
@@ -58,6 +61,15 @@
           </el-table-column>
         </el-table>
       <!-- 分页区域 -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="q.pagenum"
+        :page-sizes="[3,5, 10, 15, 20]"
+        :page-size="q.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </el-card>
     <!-- 发表文章的 Dialog 对话框 -->
     <el-dialog title="发表文章"
@@ -100,6 +112,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
   name: 'ArtList',
   data() {
@@ -137,7 +150,8 @@ export default {
       cateList: [],
       articleList: [],
       // 预览头像
-      preview: ''
+      preview: '',
+      total: 0
     }
   },
   methods: {
@@ -157,8 +171,10 @@ export default {
     },
     async initArticleList() {
       const { data: res } = await this.$http.get('/my/article/list', { params: this.q })
+      // console.log(res)
       if (res.code === 0) {
         this.articleList = res.data
+        this.total = res.total
       }
     },
     hImg(e) {
@@ -192,11 +208,32 @@ export default {
         if (res.code === 0) {
           this.$message.success(res.message)
           this.pubDialog = false
-          // this.getCateList()
+          // 清空表单数据
+          this.$refs.pubForm.resetFields()
+          this.preview = ''
+          this.initArticleList()
         } else {
           this.$message.error(res.message)
         }
       })
+    },
+    formatDate(date) {
+      return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`)
+      this.q.pagesize = val
+      // 默认展示第一页数据
+      this.pagenum = 1
+      // 重新刷新
+      this.initArticleList()
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`)
+      // 为页码值赋值
+      this.q.pagenum = val
+      // 重新发起请求
+      this.initArticleList()
     }
   },
   created() {
@@ -224,5 +261,8 @@ export default {
   width: 400px;
   height: 280px;
   object-fit: cover;
+}
+.el-pagination {
+  margin-top: 15px;
 }
 </style>
