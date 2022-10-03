@@ -29,7 +29,34 @@
       </div>
 
       <!-- 文章表格区域 -->
-
+        <el-table
+          :data="articleList"
+          border
+          stripe
+          style="width: 100%">
+          <el-table-column
+            prop="title"
+            label="文章标题"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="cate_name"
+            label="文章分类"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="pub_date"
+            label="发表时间">
+          </el-table-column>
+          <el-table-column
+            prop="state"
+            label="状态">
+          </el-table-column>
+          <el-table-column
+            label="操作">
+            <el-button size="mini" type="danger">删除</el-button>
+          </el-table-column>
+        </el-table>
       <!-- 分页区域 -->
     </el-card>
     <!-- 发表文章的 Dialog 对话框 -->
@@ -108,6 +135,7 @@ export default {
         ]
       },
       cateList: [],
+      articleList: [],
       // 预览头像
       preview: ''
     }
@@ -125,6 +153,12 @@ export default {
       const { data: res } = await this.$http.get('/my/cate/list')
       if (res.code === 0) {
         this.cateList = res.data
+      }
+    },
+    async initArticleList() {
+      const { data: res } = await this.$http.get('/my/article/list', { params: this.q })
+      if (res.code === 0) {
+        this.articleList = res.data
       }
     },
     hImg(e) {
@@ -167,6 +201,7 @@ export default {
   },
   created() {
     this.getCateList()
+    this.initArticleList()
   }
 }
 </script>
