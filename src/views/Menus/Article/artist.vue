@@ -35,9 +35,12 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="title"
+
             label="文章标题"
             width="180">
+            <template v-slot="{row}">
+             <el-link type="primary" @click="showDetail(row.id)">{{row.title}}</el-link>
+            </template>
           </el-table-column>
           <el-table-column
             prop="cate_name"
@@ -108,6 +111,26 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 查看文章详情的对话框 -->
+    <el-dialog title="文章预览" :visible.sync="detailVisible" width="80%">
+      <h1 class="title">{{ artDetail.title }}</h1>
+
+      <div class="info">
+        <span>作者：{{ artDetail.nickname || artDetail.username }}</span>
+        <span>发布时间：{{ formatDate(artDetail.pub_date) }}</span>
+        <span>所属分类：{{ artDetail.cate_name }}</span>
+        <span>状态：{{ artDetail.state }}</span>
+      </div>
+
+      <!-- 分割线 -->
+      <el-divider></el-divider>
+
+      <!-- 文章的封面 -->
+      <img :src="'http://www.liulongbin.top:3008' + artDetail.cover_img" alt="" />
+
+      <!-- 文章的详情 -->
+      <div v-html="artDetail.content" class="detail-box"></div>
+    </el-dialog>
   </div>
 </template>
 
@@ -151,7 +174,9 @@ export default {
       articleList: [],
       // 预览头像
       preview: '',
-      total: 0
+      total: 0,
+      detailVisible: false,
+      artDetail: {}
     }
   },
   methods: {
@@ -244,6 +269,14 @@ export default {
         state: ''
       }
       this.initArticleList()
+    },
+    async showDetail(id) {
+      const { data: res } = await this.$http.get('/my/article/info', { params: { id } })
+      console.log(res)
+      if (res.code === 0) {
+        this.artDetail = res.data
+        this.detailVisible = true
+      }
     }
   },
   created() {
@@ -274,5 +307,26 @@ export default {
 }
 .el-pagination {
   margin-top: 15px;
+}
+.title {
+  font-size: 24px;
+  text-align: center;
+  font-weight: normal;
+  color: #000;
+  margin: 0 0 10px 0;
+}
+
+.info {
+  font-size: 12px;
+  span {
+    margin-right: 20px;
+  }
+}
+
+// 修改 dialog 内部元素的样式，需要添加样式穿透
+/deep/ .detail-box {
+  img {
+    width: 500px;
+  }
 }
 </style>
