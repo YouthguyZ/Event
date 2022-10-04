@@ -285,6 +285,10 @@ export default {
         .then(async() => {
           const { data: res } = await this.$http.delete('/my/article/info', { params: { id } })
           if (res.code !== 0) this.$message.error(res.message)
+          // 删除优化
+          if (this.articleList.length === 1 && this.q.pagenum > 1) {
+            this.q.pagenum--
+          }
           this.initArticleList()
         })
         .catch(e => {
