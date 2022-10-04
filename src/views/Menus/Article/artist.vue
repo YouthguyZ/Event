@@ -60,7 +60,9 @@
           </el-table-column>
           <el-table-column
             label="操作">
-            <el-button size="mini" type="danger">删除</el-button>
+            <template v-slot="{row}">
+              <el-button size="mini" type="danger" @click="hDelete(row.id)">删除</el-button>
+            </template>
           </el-table-column>
         </el-table>
       <!-- 分页区域 -->
@@ -277,6 +279,17 @@ export default {
         this.artDetail = res.data
         this.detailVisible = true
       }
+    },
+    hDelete(id) {
+      this.$confirm('确定要删除文章吗？', '提示', { type: 'warning' })
+        .then(async() => {
+          const { data: res } = await this.$http.delete('/my/article/info', { params: { id } })
+          if (res.code !== 0) this.$message.error(res.message)
+          this.initArticleList()
+        })
+        .catch(e => {
+
+        })
     }
   },
   created() {
